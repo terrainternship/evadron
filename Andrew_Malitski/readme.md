@@ -10,9 +10,11 @@ Evodrone_Mask R-CNN 24.09.23.ipynb - эксперимент с R-CNN
 проблема с разметкой датасета
 
 24.09.23
-Онлайн трекинг через HDMI вход в ноутбук: У меня почемуто работает только в Pycharm !!!
+Онлайн трекинг через HDMI вход в ноутбук: 
 
-Installation
+У меня почемуто работает только в Pycharm !!!
+
+Installation:
 
 Start with Python>=3.8 environment.
 
