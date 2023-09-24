@@ -14,17 +14,15 @@ Evodrone_Mask R-CNN 24.09.23.ipynb - эксперимент с R-CNN
 
 !!! У меня работает только в Pycharm !!!
 
-Installation:
+Installation (Python>=3.8 environment) :
 
-Python>=3.8 environment.
+$git clone https://github.com/mikel-brostrom/yolo_tracking.git
 
-git clone https://github.com/mikel-brostrom/yolo_tracking.git
+$cd yolo_tracking
 
-cd yolo_tracking
+$pip install -v -e .
 
-pip install -v -e .
-
-Запускаем файл track.py (он уже будет после импорта, но чтобы посмотреть что там разместил копию у себя здесь в папке в гите:
+Запускаем файл track.py (он уже будет после импорта, но чтобы посмотреть что там под капотом разместил копию у себя здесь в папке в гите:
 
 python examples/track.py --yolo-model yolov8n --tracking-method deepocsort --source 0 --show
 
