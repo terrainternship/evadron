@@ -26,7 +26,7 @@ $pip install -v -e .
 
 разместил копию у себя здесь в папке в гите:
 
-python examples/track.py --yolo-model yolov8n --tracking-method deepocsort --source 0 --show
+$python examples/track.py --yolo-model yolov8n --tracking-method deepocsort --source 0 --show
 
 [Видео онлайн обработки #1](https://drive.google.com/file/d/1Y93U_Ws8IV3epZwKx_TFD-FvJJWxc5lh/view?usp=sharing)
 
