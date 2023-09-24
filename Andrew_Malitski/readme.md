@@ -18,11 +18,11 @@ Evodrone_Mask R-CNN 24.09.23.ipynb - эксперимент с R-CNN
 
 24.09.23
 
-Онлайн трекинг через HDMI вход в ноутбук: 
+Онлайн трекинг через HDMI вход ноутбука : 
 
 !!! У меня работает только в Pycharm !!!
 
-Installation (Python>=3.8 environment) :
+Installation (Python>=3.8 environment):
 
 $ git clone https://github.com/mikel-brostrom/yolo_tracking.git
 
