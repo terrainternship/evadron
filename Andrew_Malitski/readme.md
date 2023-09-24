@@ -5,5 +5,11 @@ https://drive.google.com/drive/folders/1pYByFEaMr1roPbb4YPeVVmcQVZxZn4kU?usp=sha
 
 Создан новый проект в робофлоу, удалены неинформативные кадры.
 
+24.09.23
+Evodrone_Mask R-CNN 24.09.23.ipynb - эксперимент с R-CNN 
+проблема с разметкой датасета
+
+24.09.23
+
 
 
