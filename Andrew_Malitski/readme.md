@@ -10,12 +10,17 @@ Evodrone_Mask R-CNN 24.09.23.ipynb - эксперимент с R-CNN
 проблема с разметкой датасета
 
 24.09.23
-Онлайн трекинг через HDMI вход в ноутбук:
-У меня почемуто работает только в Pycharm !!!
+Онлайн трекинг через HDMI вход в ноутбук: У меня почемуто работает только в Pycharm !!!
+
 Installation
+
 Start with Python>=3.8 environment.
+
 git clone https://github.com/mikel-brostrom/yolo_tracking.git
+
 cd yolo_tracking
+
 pip install -v -e .
+
 Дальше в папку
 yolo_tracking/examples копируем файл track.py и запускаем его.
