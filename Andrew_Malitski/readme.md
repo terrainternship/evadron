@@ -25,7 +25,7 @@ pip install -v -e .
 Дальше в папку
 yolo_tracking/examples копируем файл track.py и запускаем его.
 
-[Пример онлайн обработки #1](https://drive.google.com/file/d/1Y93U_Ws8IV3epZwKx_TFD-FvJJWxc5lh/view?usp=sharing)
+[Видео онлайн обработки #1](https://drive.google.com/file/d/1Y93U_Ws8IV3epZwKx_TFD-FvJJWxc5lh/view?usp=sharing)
 
-[Пример онлайн обработки #2](https://drive.google.com/file/d/1zTZdVtxysBqSu05_fbO1UcQKgyE5hqWU/view?usp=sharing)
+[Видео онлайн обработки #2](https://drive.google.com/file/d/1zTZdVtxysBqSu05_fbO1UcQKgyE5hqWU/view?usp=sharing)
 
