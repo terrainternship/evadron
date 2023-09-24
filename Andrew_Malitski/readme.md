@@ -22,25 +22,6 @@ cd yolo_tracking
 
 pip install -v -e .
 
-Дальше в папку
-yolo_tracking/examples копируем файл track.py и запускаем его:
-
-Тимур, [24.09.2023 12:34]
-python examples/track.py --yolo-model yolov8n --tracking-method deepocsort --source 0 --show
-
-Andrew Malitski, [24.09.2023 12:58]
-24.09.23 Онлайн трекинг через HDMI вход в ноутбук: У меня почемуто работает только в Pycharm !!!
-
-Installation
-
-Start with Python>=3.8 environment.
-
-git clone https://github.com/mikel-brostrom/yolo_tracking.git
-
-cd yolo_tracking
-
-pip install -v -e .
-
 Дальше в папку yolo_tracking/examples копируем файл track.py (лежит в соем гите выше) и запускаем его:
 
 python examples/track.py --yolo-model yolov8n --tracking-method deepocsort --source 0 --show
