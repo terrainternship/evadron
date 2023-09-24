@@ -24,7 +24,7 @@ cd yolo_tracking
 
 pip install -v -e .
 
-Запускаем файл track.py:
+Запускаем файл track.py (он уже будет после импорта, но чтобы посмотреть что там разместил копию у себя здесь в папке в гите:
 
 python examples/track.py --yolo-model yolov8n --tracking-method deepocsort --source 0 --show
 
