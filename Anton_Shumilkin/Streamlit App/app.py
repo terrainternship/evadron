@@ -222,8 +222,8 @@ def page_demo():
         # col_start_from, col_step = st.columns([5, 2])
         col_start_from, _, _, col_step = st.columns([2, 1, 1, 2])
         start_from = col_start_from.number_input(
-            'Start From:', 
-            min_value=0.0, step=0.5, format='%f', value=0.0, 
+            'Start From, sec.:', 
+            min_value=0.0, max_value=float(video_length), step=0.5, format='%f', value=0.0, 
             help='Time shift from the beginning (in seconds)'
         )
         step = col_step.number_input(

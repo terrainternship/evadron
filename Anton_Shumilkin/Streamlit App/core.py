@@ -96,41 +96,37 @@ def predict_frame(model, frame,
                   draw_titles=True, 
                   batch_size=BATCH_SIZE):
 
-    if task == 'detect':
-        frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)  # convert color palette to RGB
-        frame_masked = model(frame)[0].plot(boxes=True, masks=True, labels=True, conf=False)
+    if to_resize:
+        frame = cv2.resize(frame, image_size[::-1])  # resize the frame if needed
 
+    frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)  # convert color palette to RGB
+
+    if task == 'detect':
+        frame_masked = model(frame)[0].plot(boxes=True, masks=True, labels=True, conf=False)
     else:
         if is_yolo is None:
             is_yolo = is_yolo_model(model)
 
         if is_yolo:
             results = model(frame)[0]
-
             names = results.names
             classes = [int(c) for c in results.boxes.cls]  # get predicted classes indices
 
-            masks_arr = results.masks.cpu().data.numpy()
-
-            mask_size = masks_arr.shape[1:]
-
-            multiclass_mask = np.zeros(mask_size, dtype=np.uint8)  # INPUT_SIZE
-            for class_id, binary_mask in zip(classes, masks_arr):  # CLASS_LABELS.values()
-                # st.write(class_id, binary_mask.shape, multiclass_mask.shape)
-                # if not class_id == 0:
-                multiclass_mask = np.where(binary_mask, class_id - 1, multiclass_mask)
-                # mask = np.all(image_arr == i, axis=0)
-                # result[:, mask] = class_color
-
-            # st.write(multiclass_mask)
-        else:
-            if to_resize:
-                frame_pred = cv2.resize(frame, image_size[::-1])  # resize the frame if needed
+            if results.masks:
+                masks_arr = results.masks.cpu().data.numpy()
+                mask_size = masks_arr.shape[1:]
+                multiclass_mask = np.zeros(mask_size, dtype=np.uint8)
+                for class_id, binary_mask in zip(classes, masks_arr):  # CLASS_LABELS.values()
+                    # st.write(class_id, binary_mask.shape, multiclass_mask.shape)
+                    # if not class_id == 0:
+                    multiclass_mask = np.where(binary_mask, class_id - 1, multiclass_mask)
+                    # mask = np.all(image_arr == i, axis=0)
+                    # result[:, mask] = class_color
             else:
-                frame_pred = frame
-
-            frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)  # convert color palette to RGB
-
+                multiclass_mask = np.zeros((*frame.shape[:-1], 1), dtype=np.uint8)
+        else:
+            # Resize the frame if needed
+            frame_pred = cv2.resize(frame, image_size[::-1]) if to_resize else frame
             predict = np.argmax(
                 model.predict(
                     [frame_pred[None, ...] / 255.0],
@@ -141,7 +137,6 @@ def predict_frame(model, frame,
 
         # Scale the mask to the original frame size
         multiclass_mask = scale_image(multiclass_mask, frame.shape[:-1]).squeeze(axis=2)
-
         # Create mask overlay for the frame image
         frame_masked = imgviz.label2rgb(multiclass_mask, frame, 
                                         label_names=dict(list(enumerate(CLASS_LABELS.keys()))[1:]),  # omit background label in the legend
