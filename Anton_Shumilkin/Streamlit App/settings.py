@@ -14,10 +14,18 @@ CLASS_LABELS = {
 }
 
 
-MODELS_URLS = [
-    'https://drive.google.com/uc?id=1Hd1Qjeg9e2A6a-FLXBqqgVogpWOI86-p',  # unet_pspnet_model_best.h5
-    'https://drive.google.com/uc?id=1PWerQAn10BIRZ-quZ7h2A82Aykn-IZ17'   # unet_model2_best_add+.h5
-]
+MODELS_GDRIVE = {
+    'unet_pspnet_model_best.h5': 'https://drive.google.com/uc?id=1Hd1Qjeg9e2A6a-FLXBqqgVogpWOI86-p',  # 
+    'unet_model_best__UNet_PSP_plus.h5': 'https://drive.google.com/uc?id=1ggG4ak73nX08kcOPZbZLe4_U1fSP9sdM',   # 
+
+    'best_detect_YOLO8.pt': 'https://drive.google.com/uc?id=1nQs75C05BChBUl_dh7hIDgiZl9Wb5Kvi',  #
+    'bisenetv2_fcn_4xb4-80k_evod2-1024x1024.pth': 'https://drive.google.com/uc?id=1P0IU8FEutFo8jOc5cKZ6AkTBY2t-Ef14',  #
+    'psp_unet_model_best__12.10.2023.h5': 'https://drive.google.com/uc?id=1p8uC1zW6LAdtkePH_FbUgbFA7a3IPbqv',  #
+    'unet_model_best__08.10.2023_60ep.h5': 'https://drive.google.com/uc?id=1Fxo_XMDuseHJghD6faWp88VJNbHtUUWY',  #
+    'weights_yolo8s-seg.pt': 'https://drive.google.com/uc?id=1wwuxuhNUKVrjRtiYjyFoXmK_Ult-5kBu',  #
+    'weights_yolo8x-seg.0.87.pt': 'https://drive.google.com/uc?id=1ZmZCv1koxcmdH0MIcYqDeKFiqKPolEMz',  #
+    'Yv8xSeg_67-71_best.pt': 'https://drive.google.com/uc?id=1II0vSTvVdtACXVBjKKqFEJDq4lykLFQK'  #
+}
 
 
 EXAMPLES = {

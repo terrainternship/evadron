@@ -8,7 +8,7 @@ import cv2
 # from core import *
 import core
 # from examples import EXAMPLES
-from settings import CLASS_LABELS, MODELS_URLS, EXAMPLES
+from settings import CLASS_LABELS, MODELS_GDRIVE, EXAMPLES
 
 # import numpy as np
 import pandas as pd
@@ -37,7 +37,7 @@ st.markdown(
 )
 
 # Load pretrained models and start new tensorflow session
-# session, MODELS = load_models(MODELS_URLS)
+# session, MODELS = load_models(MODELS_GDRIVE)
 session, MODELS = core.load_models()
 
 src_help = '''
@@ -158,7 +158,7 @@ def page_youtube():
 def page_demo():
     if 'file_selector_is_expanded' not in st.session_state:
         st.session_state['file_selector_is_expanded'] = True
-    file_selector_container = st.expander(
+    file_selector_container = st.sidebar.expander(
         'Choose a video file', 
         expanded=st.session_state['file_selector_is_expanded']
     )

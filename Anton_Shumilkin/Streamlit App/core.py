@@ -1,7 +1,7 @@
 import streamlit as st
 
 # from utils import *
-from settings import CLASS_LABELS
+from settings import CLASS_LABELS, MODELS_GDRIVE
 
 import cv2
 import imgviz
@@ -40,6 +40,21 @@ def is_yolo_model(model):
     return isinstance(model, YOLO)
 
 
+def download_models(models_urls=MODELS_GDRIVE, models_dir='models'):
+    '''Download pretrained models'''
+
+    models_list = []
+    # Download each model
+    for model_name, model_url in models_urls.items():
+        output_path = f'{models_dir}/{model_name}'
+        if not os.path.exists(output_path):
+            with st.spinner("Downloading model... this may take a while! \n Don't stop!"):
+                # Download the file from Google Drive
+                gdown.download(model_url, output_path, quiet=False)
+        models_list.append(output_path)
+    return models_list
+
+
 @st.cache_resource
 def load_models(models_urls=None, models_dir='models'):
     '''Load pretrained models'''
@@ -54,14 +69,7 @@ def load_models(models_urls=None, models_dir='models'):
         save_dest.mkdir(exist_ok=True)
 
         if models_urls:
-            models_list = []
-            for i, m_url in enumerate(models_urls):
-                model_file = os.path.join(models_dir, f'model_{i}.h5')
-                if not Path(model_file).exists():
-                    with st.spinner("Downloading model... this may take a while! \n Don't stop!"):
-                        # Download the file from Google Drive
-                        gdown.download(m_url, model_file, quiet=False)
-                models_list.append(model_file)
+            models_list = download_models(models_urls=models_urls, models_dir=models_dir)
         else:
             # Load from the local dir
             models_list = [os.path.join(models_dir, f) for f in os.listdir(models_dir) 
