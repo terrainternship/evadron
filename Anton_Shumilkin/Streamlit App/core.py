@@ -43,6 +43,7 @@ def is_yolo_model(model):
 def download_models(models_urls=MODELS_GDRIVE, models_dir='models'):
     '''Download pretrained models'''
 
+    os.makedirs(models_dir, exist_ok=True)
     models_list = []
     # Download each model
     for model_name, model_url in models_urls.items():
@@ -181,10 +182,10 @@ def process_video(model,
     output_file = output_path
 
     # fourcc = cv2.VideoWriter_fourcc(*'MP4V')
-    fourcc = cv2.VideoWriter_fourcc(*'XVID')
+    # fourcc = cv2.VideoWriter_fourcc(*'XVID')
     # fourcc = cv2.VideoWriter_fourcc(*'DIVX')
     # fourcc = cv2.VideoWriter_fourcc(*'MJPG')
-    # fourcc = int(cap.get(cv2.CAP_PROP_FOURCC))  # use the original codec
+    fourcc = int(vidcap.get(cv2.CAP_PROP_FOURCC))  # use the original codec
 
 
     # Create VideoWriter object to write the resized video
