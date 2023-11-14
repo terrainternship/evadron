@@ -29,6 +29,7 @@ MODELS_GDRIVE = {
 
 
 VIDEOS_GDRIVE = {
+    'temp':                                            'https://drive.google.com/uc?id=16wDzvHhc165dg7pGXtOuEVAST9Fzqmic',  # temp
     'Убранное поле+поле под паром.mp4':                'https://drive.google.com/uc?id=1JUnXrS2goXXOxljCNA3QGXLXUn6opUv6',  # video_1
     'Перепаханное поле+дорога+дома+под паром+лес.mp4': 'https://drive.google.com/uc?id=16ujmFjLvcsYsyUn9mvEelITAUWx2DbK_',  # video_2
     'Убранное поле+панорама.mp4':                      'https://drive.google.com/uc?id=1l3Vj9Dy--TBcGkNY4G8sTRNc2hMLeYjI',  # video_5

@@ -45,7 +45,7 @@ def download_videos(videos_urls=VIDEOS_GDRIVE, videos_dir='.'):
     # os.makedirs(videos_dir, exist_ok=True)
     # videos_list = []
     # Download each model
-    for video_name, video_url in models_urls.items():
+    for video_name, video_url in videos_urls.items():
         output_path = f'{videos_dir}/{video_name}'
         if not os.path.exists(output_path):
             with st.spinner(f"Downloading video {video_name}... this may take a while! \n Don't stop!"):
