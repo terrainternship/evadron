@@ -91,15 +91,14 @@ def ui_main():
             # videofile_name = os.path.split(videofile)[-1]
             file_path_input = st.text_input('Video file path:', videofile)
         else:
-            videofile = st.file_uploader('Upload a video', type=video_extensions)
-            # videofile_name = videofile.name if videofile else ''
-
-
+            uploaded_video = st.file_uploader('Upload a video', type=video_extensions)
+            # videofile_name = uploaded_video.name if uploaded_video else ''
+            if uploaded_video:
+                videofile = uploaded_video.name
+                with open(videofile, mode='wb') as f:
+                    f.write(uploaded_video.read())  # save video to disk
     
     st.sidebar.title('Options')
-
-
-
     option_task = st.sidebar.selectbox('Task:', ['Segment', 'Detect'])
     
     global option_model
@@ -411,46 +410,46 @@ def page_convert_video():
     #         # ui_processed_video(audio_wav, audio_np)
 
 
-def ui_processed_video(audio_wav, audio_np, show_button=True):
-    '''UI to show sound processing results'''
-    _, center_h, _ = st.columns([1, 2, 1])
-    center_h.header('Processed Video')
+# def ui_processed_video(audio_wav, audio_np, show_button=True):
+#     '''UI to show sound processing results'''
+#     _, center_h, _ = st.columns([1, 2, 1])
+#     center_h.header('Processed Video')
 
-    st.audio(audio_wav)
-    features = get_features(audio_np)
+#     st.audio(audio_wav)
+#     features = get_features(audio_np)
     
-    if show_button:
-        _, center, _ = st.columns([1, 1, 1])
-        if center.button('🔮 Perform Segmentation'):
-            ui_recognition(features)
-    else:
-        ui_recognition(features)
+#     if show_button:
+#         _, center, _ = st.columns([1, 1, 1])
+#         if center.button('🔮 Perform Segmentation'):
+#             ui_recognition(features)
+#     else:
+#         ui_recognition(features)
 
 
-def ui_recognition(features):
-    '''Recognition UI interface'''
-    with st.spinner('Predicting..'):
-        probs, accent = recognize_accent(MODELS[option_model], features)
+# def ui_recognition(features):
+#     '''Recognition UI interface'''
+#     with st.spinner('Predicting..'):
+#         probs, accent = recognize_accent(MODELS[option_model], features)
 
-    st.success(f'🔢 Class: **`{accent.upper()}`**')
+#     st.success(f'🔢 Class: **`{accent.upper()}`**')
 
-    # Compute and display prediction probabilities
-    probs_df = pd.DataFrame.from_dict(MODELS[option_model].accents_dict, 
-                                      orient='index', columns=['Accent'])
-    probs_df['Probability'] = [f'{x:.4f}%' for x in probs]
-    probs_df.set_index('Accent', inplace=True)
-    probs_df.sort_values('Probability', ascending=False, inplace=True)
+#     # Compute and display prediction probabilities
+#     probs_df = pd.DataFrame.from_dict(MODELS[option_model].accents_dict, 
+#                                       orient='index', columns=['Accent'])
+#     probs_df['Probability'] = [f'{x:.4f}%' for x in probs]
+#     probs_df.set_index('Accent', inplace=True)
+#     probs_df.sort_values('Probability', ascending=False, inplace=True)
     
-    st.write('🎲 Prediction Probabilities:')
-    # st.success(f'API response: {response.text}')
+#     st.write('🎲 Prediction Probabilities:')
+#     # st.success(f'API response: {response.text}')
 
-    get_tone = lambda c: hex(int(255 - 255 * c))[2:]
-    make_color = lambda c: f'#FFFF{get_tone(c)}'.ljust(7, '0')
-    highlight_max = lambda cells: [
-        f'background-color: {make_color(float(c[:-1]))}'
-        for c in cells
-    ]
-    st.dataframe(probs_df.style.apply(highlight_max))
+#     get_tone = lambda c: hex(int(255 - 255 * c))[2:]
+#     make_color = lambda c: f'#FFFF{get_tone(c)}'.ljust(7, '0')
+#     highlight_max = lambda cells: [
+#         f'background-color: {make_color(float(c[:-1]))}'
+#         for c in cells
+#     ]
+#     st.dataframe(probs_df.style.apply(highlight_max))
 
 
 if __name__ == "__main__":
