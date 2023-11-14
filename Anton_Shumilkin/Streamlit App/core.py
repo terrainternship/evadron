@@ -1,8 +1,5 @@
 import streamlit as st
 
-# from utils import *
-from settings import CLASS_LABELS, MODELS_GDRIVE
-
 import cv2
 import imgviz
 from ultralytics.utils.ops import scale_image
@@ -18,6 +15,7 @@ from stqdm import stqdm
 import tensorflow as tf
 from tensorflow.keras.models import load_model as load_model_tensorflow
 
+from settings import CLASS_LABELS, MODELS_GDRIVE
 
 ###
 ### APP CORE
@@ -30,6 +28,7 @@ TF_HASH_FUNCS = {
 
 
 BATCH_SIZE = 16
+MODELS_DIR = 'models'
 
 
 ###==============================================
@@ -40,7 +39,7 @@ def is_yolo_model(model):
     return isinstance(model, YOLO)
 
 
-def download_models(models_urls=MODELS_GDRIVE, models_dir='models'):
+def download_models(models_urls=MODELS_GDRIVE, models_dir=MODELS_DIR):
     '''Download pretrained models'''
 
     os.makedirs(models_dir, exist_ok=True)
@@ -57,7 +56,7 @@ def download_models(models_urls=MODELS_GDRIVE, models_dir='models'):
 
 
 @st.cache_resource
-def load_models(models_urls=None, models_dir='models'):
+def load_models(models_urls=None, models_dir=MODELS_DIR):
     '''Load pretrained models'''
 
     # Open a new TensorFlow session

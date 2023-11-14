@@ -190,6 +190,9 @@ def page_demo():
 
     # Perform videocapture and inference if a video file is present
     if videofile:
+        if 'demo_playing' not in st.session_state:
+            st.session_state['demo_playing'] = False
+
         vidcap = cv2.VideoCapture(videofile)  # load the video for capturing
 
         # Get video properties
@@ -232,7 +235,8 @@ def page_demo():
             help='Step (frames)'
         )
 
-        label_start, label_stop = '⭕ Start', '▣ Stop'
+        # label_start, label_stop = '⭕ Start', '▣ Stop'
+        label_start, label_stop = '🛸 Start', '▣ Stop'
 
         col_start_button, col_stop_button, _ = st.columns([1, 5, 1])
         start_button = col_start_button.button(label_start, type='primary')
@@ -253,7 +257,9 @@ def page_demo():
         num_frames = frame_count  # 100
 
         if start_button:
+            st.session_state['demo_playing'] = True
             stop_button = col_stop_button.button(label_stop)
+
             for i in range(int(num_frames - start_from)):
                 if step > 1:
                     vidcap.set(cv2.CAP_PROP_POS_FRAMES, frame_id)  # jump <step> frames forward
@@ -289,12 +295,15 @@ def page_demo():
                 )
 
                 frame_id += step
+
         stop_button = col_stop_button.empty()
+        st.session_state['demo_playing'] = False
 
         
         output_file = f'{os.path.splitext(videofile)[0]}_{task}_masked.avi'
+        label_start_convertion, label_stop_convertion = '🤖 Convert', '▣ Cancel'
         col_start_convertion_button, col_stop_conversion_button, _ = st.columns([1, 5, 1])
-        start_conversion_button = col_start_convertion_button.button('Convert')
+        start_conversion_button = col_start_convertion_button.button(label_start_convertion)
         stop_conversion_button = col_stop_conversion_button.empty()
 
         if start_conversion_button:
