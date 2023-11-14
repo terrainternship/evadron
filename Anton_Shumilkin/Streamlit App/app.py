@@ -50,20 +50,59 @@ Select the **Video Source** and then
 def ui_main():
     '''Draw main UI layout'''
     st.title('EvoDrone')
+
+    # MODE_OPTIONS = {
+    #     '🛸 Demo': page_demo,
+    #     '🤖 Convert': page_convert_video,
+    #     # '🔴 YouTube': page_youtube
+    # }
+    # option_source = st.sidebar.selectbox('Mode:', [*MODE_OPTIONS], help=src_help)
+
+    if 'file_selector_is_expanded' not in st.session_state:
+        st.session_state['file_selector_is_expanded'] = True
+
+    file_selector_container = st.sidebar.expander(
+        'Choose a video file', 
+        expanded=st.session_state['file_selector_is_expanded']
+    )
+
+    global videofile
+    videofile = None
+
+    # Choose file upload mode
+    with file_selector_container:
+        video_extensions = ['.mp4', '.avi', '.mkv', '.mov', '.mkv', '.wmv', '.flv', '.webm']
+        upload_mode = st.toggle('Local dir', help='Choosing between uploading and local directory files list', value=True)
+
+        if upload_mode:
+            def file_selector(folder_path='.'):
+                is_video_file = lambda f: any(f.lower().endswith(ext) for ext in video_extensions)
+
+                video_files = [f for f in os.listdir(folder_path) if is_video_file(f)]
+
+                if not video_files:
+                    st.warning('No video files found in the selected directory.')
+                    return None
+
+                selected_filename = st.selectbox('Select a video file', video_files, help=f'from {folder_path}')
+                return os.path.join(folder_path, selected_filename)
+
+            videofile = file_selector()
+            # videofile_name = os.path.split(videofile)[-1]
+            file_path_input = st.text_input('Video file path:', videofile)
+        else:
+            videofile = st.file_uploader('Upload a video', type=video_extensions)
+            # videofile_name = videofile.name if videofile else ''
+
+
     
     st.sidebar.title('Options')
 
-    MODE_OPTIONS = {
-        '🛸 Demo': page_demo,
-        '🤖 Convert': page_convert_video,
-        '🔴 YouTube': page_youtube
-    }
-    option_source = st.sidebar.selectbox('Mode:', [*MODE_OPTIONS], 
-                                         help=src_help)
+
 
     option_task = st.sidebar.selectbox('Task:', ['Segment', 'Detect'])
     
-    global option_model  # will be used in `ui_recognition()`
+    global option_model
     option_model = st.sidebar.radio('Model:', [m for m in MODELS if MODELS[m].task == option_task.lower()])
 
     global model
@@ -72,7 +111,8 @@ def ui_main():
     st.sidebar.markdown('---')
 
     global draw_titles
-    draw_titles = st.sidebar.checkbox('Draw titles')
+    draw_titles = False
+    # draw_titles = st.sidebar.checkbox('Draw titles')
     # with st.sidebar.expander('wat'):
         # st.code('wat')
 
@@ -88,7 +128,8 @@ def ui_main():
         with st.sidebar.expander('Model Summary'):
             st.caption(f'Input size: {model.input_shape[1:-1]}')
 
-    MODE_OPTIONS[option_source]()  # access page UI for the selected source
+    # MODE_OPTIONS[option_source]()  # access page UI for the selected source
+    page_demo()
     
 
 def show_classes(class_labels):
@@ -156,37 +197,11 @@ def page_youtube():
 
 
 def page_demo():
-    if 'file_selector_is_expanded' not in st.session_state:
-        st.session_state['file_selector_is_expanded'] = True
-    file_selector_container = st.sidebar.expander(
-        'Choose a video file', 
-        expanded=st.session_state['file_selector_is_expanded']
-    )
-
-    # Choose file upload mode
-    with file_selector_container:
-        video_extensions = ['.mp4', '.avi', '.mkv', '.mov', '.mkv', '.wmv', '.flv', '.webm']
-        upload_mode = st.toggle('Local dir', help='Choosing between uploading and local directory files list', value=True)
-
-        if upload_mode:
-            def file_selector(folder_path='.'):
-                is_video_file = lambda f: any(f.lower().endswith(ext) for ext in video_extensions)
-
-                video_files = [f for f in os.listdir(folder_path) if is_video_file(f)]
-
-                if not video_files:
-                    st.warning('No video files found in the selected directory.')
-                    return None
-
-                selected_filename = st.selectbox('Select a video file', video_files, help=f'from {folder_path}')
-                return os.path.join(folder_path, selected_filename)
-
-            videofile = file_selector()
-            # videofile_name = os.path.split(videofile)[-1]
-            file_path_input = st.text_input('Video file path:', videofile)
-        else:
-            videofile = st.file_uploader('Upload a video', type=video_extensions)
-            # videofile_name = videofile.name if videofile else ''
+    MODE_OPTIONS = {
+        '🛸 Demo': 'demo',
+        '🤖 Convert': 'convert',
+    }
+    mode = st.selectbox('Mode:', [*MODE_OPTIONS])#, help=src_help)
 
     # Perform videocapture and inference if a video file is present
     if videofile:
@@ -236,7 +251,13 @@ def page_demo():
         )
 
         # label_start, label_stop = '⭕ Start', '▣ Stop'
-        label_start, label_stop = '🛸 Start', '▣ Stop'
+        label_start_demo, label_stop_demo = '🛸 Start', '▣ Stop'
+
+        label_start_convertion, label_stop_convertion = '🤖 Conv', '▣ Cancel'
+
+        label_start = label_start_demo if 'Demo' in mode else label_start_convertion
+        label_stop = label_stop_demo if 'Demo' in mode else label_stop_convertion
+
 
         col_start_button, col_stop_button, _ = st.columns([1, 5, 1])
         start_button = col_start_button.button(label_start, type='primary')
@@ -256,7 +277,7 @@ def page_demo():
 
         num_frames = frame_count  # 100
 
-        if start_button:
+        if start_button and 'Demo' in mode:
             st.session_state['demo_playing'] = True
             stop_button = col_stop_button.button(label_stop)
 
@@ -300,13 +321,15 @@ def page_demo():
         st.session_state['demo_playing'] = False
 
         
-        output_file = f'{os.path.splitext(videofile)[0]}_{task}_masked.avi'
-        label_start_convertion, label_stop_convertion = '🤖 Convert', '▣ Cancel'
-        col_start_convertion_button, col_stop_conversion_button, _ = st.columns([1, 5, 1])
-        start_conversion_button = col_start_convertion_button.button(label_start_convertion)
-        stop_conversion_button = col_stop_conversion_button.empty()
+        output_ext = '.avi'
+        # output_ext = '.mpeg'
+        output_file = f'{os.path.splitext(videofile)[0]}_{task}_masked{output_ext}'
+        # label_start_convertion, label_stop_convertion = '🤖 Conv', '▣ Cancel'
+        # col_start_convertion_button, col_stop_conversion_button, _ = st.columns([1, 5, 1])
+        # start_conversion_button = col_start_convertion_button.button(label_start_convertion, type='primary')
+        # stop_conversion_button = col_stop_conversion_button.empty()
 
-        if start_conversion_button:
+        if start_button and 'Convert' in mode:
             core.process_video(model, 
                                videofile, 
                                output_file, 
@@ -318,7 +341,7 @@ def page_demo():
                                to_resize=to_resize, 
                                image_size=image_size, 
                                draw_titles=draw_titles,
-                               col_stop_conversion_button=col_stop_conversion_button)
+                               col_stop_conversion_button=col_stop_button)
 
 
 def page_convert_video():

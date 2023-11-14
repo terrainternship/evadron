@@ -15,7 +15,7 @@ from stqdm import stqdm
 import tensorflow as tf
 from tensorflow.keras.models import load_model as load_model_tensorflow
 
-from settings import CLASS_LABELS, MODELS_GDRIVE
+from settings import CLASS_LABELS, MODELS_GDRIVE, VIDEOS_GDRIVE
 
 ###
 ### APP CORE
@@ -39,6 +39,22 @@ def is_yolo_model(model):
     return isinstance(model, YOLO)
 
 
+def download_videos(videos_urls=VIDEOS_GDRIVE, videos_dir='.'):
+    '''Download pretrained models'''
+
+    # os.makedirs(videos_dir, exist_ok=True)
+    # videos_list = []
+    # Download each model
+    for video_name, video_url in models_urls.items():
+        output_path = f'{videos_dir}/{video_name}'
+        if not os.path.exists(output_path):
+            with st.spinner(f"Downloading video {video_name}... this may take a while! \n Don't stop!"):
+                # Download the file from Google Drive
+                gdown.download(video_url, output_path, quiet=False)
+        # models_list.append(output_path)
+    # return models_list
+
+
 def download_models(models_urls=MODELS_GDRIVE, models_dir=MODELS_DIR):
     '''Download pretrained models'''
 
@@ -48,7 +64,7 @@ def download_models(models_urls=MODELS_GDRIVE, models_dir=MODELS_DIR):
     for model_name, model_url in models_urls.items():
         output_path = f'{models_dir}/{model_name}'
         if not os.path.exists(output_path):
-            with st.spinner("Downloading model... this may take a while! \n Don't stop!"):
+            with st.spinner(f"Downloading model {model_name}... this may take a while! \n Don't stop!"):
                 # Download the file from Google Drive
                 gdown.download(model_url, output_path, quiet=False)
         models_list.append(output_path)
@@ -101,11 +117,8 @@ def predict_frame(model, frame,
                   is_yolo=None, 
                   to_resize=False, 
                   image_size=None, 
-                  draw_titles=True, 
+                  draw_titles=False, 
                   batch_size=BATCH_SIZE):
-
-    if to_resize:
-        frame = cv2.resize(frame, image_size[::-1])  # resize the frame if needed
 
     frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)  # convert color palette to RGB
 
@@ -181,10 +194,10 @@ def process_video(model,
     output_file = output_path
 
     # fourcc = cv2.VideoWriter_fourcc(*'MP4V')
-    # fourcc = cv2.VideoWriter_fourcc(*'XVID')
+    fourcc = cv2.VideoWriter_fourcc(*'XVID')
     # fourcc = cv2.VideoWriter_fourcc(*'DIVX')
     # fourcc = cv2.VideoWriter_fourcc(*'MJPG')
-    fourcc = int(vidcap.get(cv2.CAP_PROP_FOURCC))  # use the original codec
+    # fourcc = int(vidcap.get(cv2.CAP_PROP_FOURCC))  # use the original codec
 
 
     # Create VideoWriter object to write the resized video
@@ -193,10 +206,10 @@ def process_video(model,
         fourcc,                       # video codec
         frame_rate,                   # fps
         frame_size,  # frame size
-        # True
+        True
     )
     if not out.isOpened():
-        st.error('Error: Could not open video file for writing.')
+        st.error(f'Error: Could not open video file ({output_file}) for writing.')
 
     num_frames = frame_count
     # Create a tqdm progress bar
@@ -233,6 +246,8 @@ def process_video(model,
         # r = results[0]
         # output = display_instances(image, r['rois'], r['masks'], r['class_ids'], class_names, r['scores'])
         # detected.append(r['class_ids'])
+
+        frame_masked = cv2.cvtColor(frame_masked, cv2.COLOR_RGB2BGR)
 
         out.write(frame_masked)
         progress_bar.update(1)
