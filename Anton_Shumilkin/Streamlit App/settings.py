@@ -16,7 +16,7 @@ CLASS_LABELS = {
 
 MODELS_GDRIVE = {
     # 'unet_pspnet_model_best.h5': 'https://drive.google.com/uc?id=1Hd1Qjeg9e2A6a-FLXBqqgVogpWOI86-p',  # 
-    'unet_model_best__UNet_PSP_plus.h5':          'https://drive.google.com/uc?id=1ggG4ak73nX08kcOPZbZLe4_U1fSP9sdM',   # 
+    # 'unet_model_best__UNet_PSP_plus.h5':          'https://drive.google.com/uc?id=1ggG4ak73nX08kcOPZbZLe4_U1fSP9sdM',   # 
 
     'best_detect_YOLO8.pt':                       'https://drive.google.com/uc?id=1nQs75C05BChBUl_dh7hIDgiZl9Wb5Kvi',  #
     'bisenetv2_fcn_4xb4-80k_evod2-1024x1024.pth': 'https://drive.google.com/uc?id=1P0IU8FEutFo8jOc5cKZ6AkTBY2t-Ef14',  #
